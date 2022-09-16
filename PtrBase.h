@@ -135,7 +135,7 @@ class PtrBase {
   }
 
   uint64_t UseCount() { return ref_ ? ref_->UseCount() : 0; }
-  uint64_t WeakCount() { return ref_ ? ref_->UseCount() : 0; }
+  uint64_t WeakCount() { return ref_ ? ref_->WeakCount() : 0; }
   element_type* Get() { return ptr_; }
 
  protected:
@@ -183,7 +183,7 @@ class PtrBase {
     return false;
   }
 
- protected:
+ public:
   RefCountBase* ref_ = nullptr;
   element_type* ptr_ = nullptr;
 };
