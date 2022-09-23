@@ -43,9 +43,6 @@ class UniquePtr {
   ~UniquePtr() { Reset(); }
 
  private:
-  template <class, class>
-  friend class UniquePtr;
-
   CompressedPair<Del, T*> pair_;
 };
 

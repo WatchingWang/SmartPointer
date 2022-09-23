@@ -1,6 +1,7 @@
 ﻿#include <atomic>
 #include <iostream>
 #include <memory>
+#include <mutex>
 #include <thread>
 
 #include "SharedPtr.h"
@@ -50,21 +51,38 @@ void TestEnableSharedFromThis() {
 }
 
 int main() {
+  std::mutex l_a;
+  std::lock_guard<std::mutex> lck(l_a);
+  
   UniquePtr<int, TestDel<int>> u_a(new int(3));
+  auto size = sizeof(u_a);
+
   UniquePtr<int, TestDel<int>> u_b(std::move(u_a));
+  auto u_c = make_unique<int>(4);
   u_a.Reset();
 
   SharedPtr<int> s_a(new int(3));
-  std::cout << *s_a << std::endl;
+  printRefCount(s_a);
+  auto size_sh = sizeof(s_a);
 
-  SharedPtr<int> s_b(std::move(s_a));
-  printRefCount(s_b);
+  WeakPtr<int> w_a(s_a);
+  printRefCount(w_a);
 
-  WeakPtr<int> w_b(s_b);
-  printRefCount(s_b);
-  if (!w_b.IsExpired()) {
-    auto s_c = w_b.Lock();
-    printRefCount(s_c);
+  {
+    SharedPtr<int> s_b(std::move(s_a));
+    printRefCount(s_b);
+
+    if (!w_a.IsExpired()) {
+      auto s_a = w_a.Lock();
+      printRefCount(s_a);
+    }
+  }
+
+  printRefCount(w_a);
+  if (!w_a.IsExpired())
+  {
+      auto s_a = w_a.Lock();
+      std::cout << "success transfer shared_ptr";
   }
 
   //  TestEnableSharedFromThis();

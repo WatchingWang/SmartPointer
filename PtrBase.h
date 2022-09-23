@@ -60,7 +60,7 @@ class RefCountBase {
   virtual ~RefCountBase() {}
 
  private:
-  std::atomic_uint64_t weaks_ = {1};
+  std::atomic_uint64_t weaks_{1};
   std::atomic_uint64_t uses_{1};
 };
 
