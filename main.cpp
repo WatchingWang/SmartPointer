@@ -53,7 +53,7 @@ void TestEnableSharedFromThis() {
 int main() {
   std::mutex l_a;
   std::lock_guard<std::mutex> lck(l_a);
-  
+
   UniquePtr<int, TestDel<int>> u_a(new int(3));
   auto size = sizeof(u_a);
 
@@ -79,10 +79,9 @@ int main() {
   }
 
   printRefCount(w_a);
-  if (!w_a.IsExpired())
-  {
-      auto s_a = w_a.Lock();
-      std::cout << "success transfer shared_ptr";
+  if (!w_a.IsExpired()) {
+    auto s_a = w_a.Lock();
+    std::cout << "success transfer shared_ptr";
   }
 
   //  TestEnableSharedFromThis();

@@ -24,7 +24,7 @@ class CompressedPair final : private T1 {
   explicit CompressedPair(OneVariadicArgs, Other1&& val1, Other2&&... val2)
       : T1(std::forward<Other1>(val1)), val2_(std::forward<Other2>(val2)...) {}
 
-  T1 GetFirst() { return *this; }
+  T1& GetFirst() { return static_cast<T1&>(*this); }
 };
 
 class RefCountBase {
@@ -104,6 +104,7 @@ class RefCountObj : public RefCountBase {
 
   T value_;
 };
+
 
 template <typename T>
 class PtrBase {
